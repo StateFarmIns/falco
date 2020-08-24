@@ -27,8 +27,8 @@ file(MAKE_DIRECTORY ${SYSDIG_CMAKE_WORKING_DIR})
 # default below In case you want to test against another sysdig version just pass the variable - ie., `cmake
 # -DSYSDIG_VERSION=dev ..`
 if(NOT SYSDIG_VERSION)
-  set(SYSDIG_VERSION "37aab8debf50140ca8796cfb732218d3ab123640")
-  set(SYSDIG_CHECKSUM "SHA256=48482e8299c092899f2516cc5a1db09fa2747fd03ec29fa555f42b62f1e38aeb")
+  set(SYSDIG_VERSION "build/stripped") # todo(leogr): set the correct version and checksum before merging
+  set(SYSDIG_CHECKSUM "SHA256=977475bbca6f28594fb251c2727e833b91ea1338d9d683eb3e84cae2e3ca9c43")
 endif()
 set(PROBE_VERSION "${SYSDIG_VERSION}")
 
@@ -65,5 +65,8 @@ add_dependencies(sinsp tbb b64 luajit)
 set(CREATE_TEST_TARGETS OFF)
 
 if(USE_BUNDLED_DEPS)
-  add_dependencies(scap grpc curl jq)
+  add_dependencies(scap jq)
+  if(NOT MINIMAL_BUILD)
+    add_dependencies(scap curl grpc)
+  endif()
 endif()
